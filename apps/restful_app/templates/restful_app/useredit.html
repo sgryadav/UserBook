@@ -4,25 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{{STATIC_URL}}/static/restful_app/css/editstyle.css" media="screen" title="no title" charset="utf-8">
     <title>Document</title>
 </head>
 <body>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <h1>Edit User {{user.id}}</h1>
-    <form action="/{{user.id}}/edit" method="post">
-        {% csrf_token %}
-        First name: <input type="text" name="edit_fname" value={{user.first_name}}>
-        Last name: <input type="text" name="edit_lname" value="{{user.last_name}}">
-        Email: <input type="email" name="edit_email" value="{{user.email}}">
-        <input type="submit" value="Update">
-    </form>
-    <a href="/users/{{user.id}}/show">Show</a>
-    <a href="/users">Go Back</a>
+    <div class="background">
+        <div class="container">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <h1>Edit Profile</h1>
+            <form align="center" action="/{{user.id}}/edit" method="post">
+                {% csrf_token %}
+               <label>Username:&nbsp; </label><input type="text" name="edit_username" value={{user.username}}>
+                &nbsp;
+                <label>Email:&nbsp;</label> <input type="email" name="edit_email" value="{{user.email}}">
+                &nbsp;
+                <input type="submit" value="Update">
+            </form>
+            <div class="nav">
+                <a href="/usersindex">Home</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

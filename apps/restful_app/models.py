@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.conf import settings
+from django.core.urlresolvers import reverse
 import re
+import bcrypt
 
 
-NAME_REGEX = re.compile(r"(^[A-Z][-a-zA-Z]+$)")
 EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 PASS_REGEX = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$')
 
@@ -12,43 +14,66 @@ class Usermanager(models.Manager):
     def reg_validator(self, postData):
         errors = {}
 
-        f_name = postData['f_name']
-        l_name = postData['l_name']
+        username = postData['username']
         email = postData['email']
+        password = postData['pass']
+        conf_password = postData['confirm_pass']
 
-        if not NAME_REGEX.match(postData['f_name']):
-           errors['first_name'] = "First name is invalid"
-        if not NAME_REGEX.match(postData['l_name']):
-           errors['last_name'] = "Last name is not valid"
         if not EMAIL_REGEX.match(postData['email']):
-             errors['email'] = "Email is invalid"
+            errors['email'] = "Email is invalid"
+        if Users.objects.filter(username=postData['username']):
+            errors['username_exist'] = "Username has been used" 
         if Users.objects.filter(email=postData['email']):
-             errors['email_exist'] = "Email has been used"
+            errors['email_exist'] = "Email has been used"
+        if not PASS_REGEX.match(password):
+            errors['pw1'] = "Password is invalid"
+        if password != conf_password:
+            errors['pw2'] = "Password does not match"
+        return errors
+
+    def log_validator(self, postData):
+        errors = {}
+
+        log_username = postData['login_username']
+        log_pw = postData['login_pass']
+
+        if Users.objects.filter(username=log_username).exists() == False:
+            errors['not_username'] = "Invalid username"
+        else:
+            db_pw = Users.objects.get(username=log_username).pw
+            if not bcrypt.checkpw(log_pw.encode(), db_pw.encode()):
+                errors['not_match'] = "Invalid password"
         return errors
 
     def edit_validator(self, postData):
         errors = {}
-        f_name = postData['edit_fname']
-        l_name = postData['edit_lname']
+        username = postData['edit_username']
         email = postData['edit_email']
 
-        if not NAME_REGEX.match(f_name):
-            errors['first_name'] = "First name is invalid"
-        if not NAME_REGEX.match(l_name):
-            errors['last_name'] = "Last name is not valid"
         if not EMAIL_REGEX.match(email):
                 errors['email'] = "Email is invalid"
-        if Users.objects.filter(email=email):
-                errors['email_exist'] = "Email has been used"
         return errors
 
 class Users(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
+    pw = models.CharField(max_length=30)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-
     objects = Usermanager()
+
+class Posts(models.Model):
+    user = models.ForeignKey(Users, related_name = "posts")
+    userwall = models.ForeignKey(Users, related_name="postswall")
+    body = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add = True)
+
+
+class Comments(models.Model):
+    post = models.ForeignKey(Posts, related_name="comments")
+    user = models.ForeignKey(Users, related_name = "comments")
+    content = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add = True)
+
 
 

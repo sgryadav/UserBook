@@ -1,0 +1,36 @@
+*:not(textarea){
+    background: url("https://www.theawl.com/wp-content/uploads/2017/02/1R8U7IRWwWJIjogmtX4c8tg.jpeg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+a{
+    color: white;
+}
+
+.navright{
+    margin-top: 50px;
+    text-align: right;
+}
+
+input[type=submit]{
+    color: white;
+}
+
+h1,h2,h4{
+    color: white;
+}
+
+.postform{
+    text-align: left;
+}
+.container{
+    text-align: center;
+}
+
+h1{
+    margin-top: 50px;
+    text-align: right;
+}

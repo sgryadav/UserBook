@@ -1,0 +1,46 @@
+*{
+    background: url("https://www.theawl.com/wp-content/uploads/2017/02/1R8U7IRWwWJIjogmtX4c8tg.jpeg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
+}
+
+
+h2,h4{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+a{
+    color: white;
+    display: inline-block;
+}
+
+h1{
+   text-align: center;
+}
+
+.users{
+    margin-top: 65px;
+}
+
+.logout{
+    margin-top: 40px;
+}
+
+.create{
+    margin-top: 50px;
+    text-align: center;
+}
+
+.profile{
+    display: inline-block;
+    margin-left: 1200px;
+}
+
+table tr th, table tr td{
+    padding: 5px;
+}

@@ -4,13 +4,65 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        {% load static %}
+        <link rel="stylesheet" href="{{STATIC_URL}}/static/restful_app/css/showstyle.css" media="screen" title="no title" charset="utf-8">
         <title>Document</title>
     </head>
     <body>
-        <h1>User {{user.id}} </h1>
-        <p>Full Name: {{user.first_name}} {{user.last_name}}</p>
-        <p>Created at: {{user.created_at}}</p>
-        <a href="/users/{{user.id}}/edit">Edit</a> |
-        <a href="/users/{{user.id}}/delete">Delete</a>
-    </body>
+        <div class="background">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-5">
+                        <h1>{{user.username}}'s Wall</h1>
+                    </div>
+                    <div class="navright" class="col-md-5">
+                        <form action="/logoff" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Log off">
+                        </form>
+                        <a href="/usersindex">Home</a>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="postform" class="col-md-12">
+                    <form action="/post/{{user.id}}" method="post">
+                        {% csrf_token %}
+                        <textarea name="msgbody" rows="4"></textarea>
+                        <br>
+                        <input type="submit" value="Post">
+                    </form>
+                </div>
+            </div>
+    
+            {% for post in posts_of_user.all %}
+                <h2 class="postbody"> {{ post.user.username }}: {{ post.body }}</h2>
+                {% for cmt in post.comments.all %}
+                    <h4>{{ cmt.user.username }}: {{ cmt.content }}</h4>
+                    {% if cmt.user.username == request.session.username %}
+                        <form action="/removecomment/{{cmt.id}}" method='POST'>
+                            {% csrf_token %}
+                            <input type="submit" name="" value="Delete Comment">
+                        </form>
+                        <br>
+                    {% endif %}
+                {% endfor %}
+                <form action="/comment/{{post.id}}" method="post">
+                    {% csrf_token %}
+                    <textarea name="cmtbody" rows="3" value="" maxlength="255"></textarea>
+                    <input type="submit" value="Add comment">
+                </form>
+                <br>
+                {% if post.user.username == request.session.username %}
+                    <form action="/removepost/{{post.id}}" method='POST'>
+                        {% csrf_token %}
+                        <input type="submit" name="" value="Delete Post">
+                    </form>
+                {% endif %}
+                <hr>
+        {% endfor %}
+    </div>
+</body>
 </html>

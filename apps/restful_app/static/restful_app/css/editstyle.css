@@ -1,0 +1,32 @@
+*:not(input){
+    background: url("https://www.theawl.com/wp-content/uploads/2017/02/1R8U7IRWwWJIjogmtX4c8tg.jpeg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+input[type=submit]{
+    background-color: url("https://www.theawl.com/wp-content/uploads/2017/02/1R8U7IRWwWJIjogmtX4c8tg.jpeg")
+}
+
+
+label{
+    color: white;
+}
+
+h1{
+    color: white;
+    margin-top: 50px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+a{
+    color: white;
+}
+.nav{
+    margin-top: 30px;
+    text-align: center;
+}
