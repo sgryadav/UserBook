@@ -63,13 +63,8 @@ def edituser(request, id):
 def showuser(request, id):
     context = {
         "user": Users.objects.get(id=id),
-        "posts_of_user": Users.objects.get(id=id).postswall
+        "posts_of_user": Users.objects.get(id=id).postswall.order_by("-created_at") 
     }
-   # query = "SELECT * FROM messages ORDER BY created_at DESC"
-	#messages = mysql.query_db(query)	
-
-	#cmtquery = "SELECT * FROM comments JOIN users ON comments.user_id = users.id JOIN messages ON messages.id = comments.msg_id ORDER BY comments.created_at ASC"
-	#comments = mysql.query_db(cmtquery)
     return render(request,"restful_app/usershow.html", context)
 
 def rendereditpage(request,id):
@@ -82,44 +77,47 @@ def rendereditpage(request,id):
 def makepost(request,id):
     current_user = Users.objects.get(username=request.session['username'])
     userwall = Users.objects.get(id=id)
+    id_of_user = userwall.id
     post = Posts.objects.create(user=current_user, userwall=userwall, body=request.POST.get('msgbody', False))
-    context = {
-        "user": userwall,
-        "posts_of_user": userwall.postswall.order_by("-created_at") 
-    }
-    return render(request,"restful_app/usershow.html", context)
+   # context = {
+    #    "user": userwall,
+     #   "posts_of_user": userwall.postswall.order_by("-created_at") 
+    #}
+    return redirect("/showuser/" + str(id_of_user))
+    
 
 def makecomment(request,id):
     current_user = Users.objects.get(username=request.session['username'])
     this_post = Posts.objects.get(id=id)
     the_user_wall = this_post.userwall
+    id_of_user = the_user_wall.id
     comment = Comments.objects.create(user=current_user, post=Posts.objects.get(id=id), content=request.POST.get('cmtbody', False))
-    context = {
-        "user": the_user_wall,
-        "posts_of_user": the_user_wall.postswall.order_by("-created_at") 
-    }
-    return render(request,"restful_app/usershow.html", context)
+    return redirect("/showuser/" + str(id_of_user))
+
 
 
 def removepost(request, id):
     this_post = Posts.objects.get(id=id)
     the_user_wall = this_post.userwall
+    id_of_user = the_user_wall.id
     Posts.objects.get(id=id).comments.all().delete()
     this_post.delete()
-    context = {
-        "user": the_user_wall,
-        "posts_of_user": the_user_wall.postswall.order_by("-created_at") 
-    }
-    return render(request,"restful_app/usershow.html", context)
+   #context = {
+    #    "user": the_user_wall,
+     #   "posts_of_user": the_user_wall.postswall.order_by("-created_at") 
+    #}
+    return redirect("/showuser/" + str(id_of_user))
 
 def removecomment(request, id):
     the_user_wall = Comments.objects.get(id=id).post.userwall
     Comments.objects.get(id=id).delete()
+    id_of_user = the_user_wall.id
     context = {
         "user": the_user_wall,
         "posts_of_user": the_user_wall.postswall.order_by("-created_at") 
     }
-    return render(request,"restful_app/usershow.html", context)
+    return redirect("/showuser/" + str(id_of_user))
+    
 
 def logoff(request):
     request.session['username'] = False

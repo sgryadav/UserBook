@@ -13,37 +13,40 @@
     {% load staticfiles %}
     <div class="background">
         <div class="container">
-
-            <a class="logout" href="/logoff">Logout</a>
-            <h1>Welcome {{request.session.username}}</h1>
-  
-            
-            <!--Logged-in user nav-->
-            <div class="profile">
-            <h4>Your Profile</h4>
-            {% if users %}
-                {% for user in users %}
-                    {% if user.username == request.session.username %}
-                        <table align="center">
-                            <tr>
-                                <td>{{user.username}}&nbsp;</td>
-                                <td>
-                                    <form action="/showuser/{{user.id}}" method="post">
-                                        {% csrf_token %}
-                                        <input type="submit" value="Your Wall">
-                                    </form>
-                                    <form action="/users/{{user.id}}/edit" method="post">
-                                        {% csrf_token %}
-                                        <input type="submit" value="Edit Profile">
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
+            <div class="row">
+                <div class="col-md-4">
+                    <a class="logout" href="/logoff">Logout</a>
+                </div>
+                <div class="col-md-4">
+                    <h1>Welcome {{request.session.username}}</h1>
+                </div>
+                <div class="col-md-4">
+                    <!--Logged-in user nav-->
+                    <div class="profile">
+                    <h4>Your Profile</h4>
+                    {% if users %}
+                        {% for user in users %}
+                            {% if user.username == request.session.username %}
+                                <table align="center">
+                                    <tr>
+                                        <td>{{user.username}}&nbsp;</td>
+                                        <td>
+                                            <form action="/showuser/{{user.id}}" method="post">
+                                                {% csrf_token %}
+                                                <input type="submit" value="Your Wall">
+                                            </form>
+                                            <form action="/users/{{user.id}}/edit" method="post">
+                                                {% csrf_token %}
+                                                <input type="submit" value="Edit Profile">
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </table>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
-                {% endfor %}
-            {% endif %}
-            </div>
-        </div>
+                    </div>
+                </div>
         <br>
         <div class="users">
             <h2>Users</h2>
